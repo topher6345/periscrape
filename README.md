@@ -34,13 +34,6 @@ will start on `localhost:3000`
 
 Lists all cryptocurrencies name and price
 
-
-#### Prices
-
-`/prices`
-
-Lists just bare prices
-
 #### Price by name
 
 `/price/:name`
