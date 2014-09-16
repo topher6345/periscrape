@@ -47,6 +47,8 @@ Lists just bare prices
 
 Lists price by route `:name`
 
+**name is case sensitive**
+
 Example: 
 
 `localhost:3000/price/Bitcoin`
