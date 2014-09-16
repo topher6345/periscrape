@@ -1,6 +1,6 @@
 # Topher Coinmarket Scrape
 
-JSON API to cryptocurrency prices using Node.js, cheerio, and Postgres.
+JSON API for cryptocurrency prices using Node.js, cheerio, and Postgres.
 
 
 ## Getting Started
