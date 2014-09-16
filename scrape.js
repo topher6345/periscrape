@@ -73,5 +73,21 @@ app.get('/', function (req, res) {
     });
 });
 
+app.get('/prices', function (req, res) {
+  sequelize
+    .query('SELECT price FROM coins', null, { raw: true })
+    .success(function(data) {
+      res.json(data);
+    });
+});
+
+app.get('/price/:name', function(req, res){
+  sequelize
+    .query('SELECT price FROM coins WHERE name = :name', null, { raw: true }, {name: req.params.name})
+    .success(function(data) {
+      res.json(data);
+    });
+});
+
 app.listen(3000);
 console.log("Now listening to response on port 3000");
