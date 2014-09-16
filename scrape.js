@@ -8,7 +8,8 @@ var sequelize = new Sequelize('periscrape', 'topher',  'Aa12345678',{
 
 var express = require('express');
 var app = express();
-
+app.set('view engine', 'jade');
+var articles;
 
 var Article = sequelize.define('Article', {
   title: Sequelize.STRING,
@@ -38,9 +39,8 @@ sequelize
     if (!!err) {
       console.log('Unable to connect to the database:', err);
       process.exit(1);
-    } else {
-      console.log('Connection to database has been established successfully.');
     }
+      console.log('Connection to database has been established successfully.');
   });
 
 
@@ -60,14 +60,24 @@ request('https://news.ycombinator.com', function (error, response, html) {
     Article.create({
       title: a.text(),
       link: a.attr('href')
+    }).success(function(){
+      sequelize
+        .query('SELECT * FROM articles', null, { raw: true })
+        .success(function(data) {
+          articles = data;
+          console.log(data);
+        });
     });
   });
 });
 
 
-app.get('/', function(req, res){
-  console.log('Listening on port 3000');
-  res.send('hello world');
+
+
+
+app.get('/', function (req, res) {
+  console.log(articles);
+  res.render('index.jade', {articles: articles});
 });
 
 app.listen(3000);

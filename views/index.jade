@@ -1,0 +1,11 @@
+html
+  head
+    title
+      | Periscrape home
+  body
+    h1
+      Topher Periscrape
+
+    each val in articles
+      h2= val.title
+      h3= val.link
