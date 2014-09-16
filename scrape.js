@@ -1,15 +1,15 @@
 var request = require('request');
 var cheerio = require('cheerio');
 var Sequelize = require('sequelize');
+var express = require('express');
+var app = express();
+var coins;
+
+// Construct sequelize
 var sequelize = new Sequelize('periscrape', 'topher',  'Aa12345678',{
   dialect: 'postgres',
   port: 5432
 });
-
-var express = require('express');
-var app = express();
-app.set('view engine', 'jade');
-var coins;
 
 
 // Define Schema
@@ -63,6 +63,8 @@ request('http://coinmarketcap.com/', function (error, response, html) {
 });
 
 // Routes
+
+  // Index
   app.get('/', function (req, res) {
     sequelize
       .query('SELECT * FROM coins', null, { raw: true })
@@ -71,6 +73,7 @@ request('http://coinmarketcap.com/', function (error, response, html) {
       });
   });
 
+  // Raw prices
   app.get('/prices', function (req, res) {
     sequelize
       .query('SELECT price, name FROM coins', null, { raw: true })
@@ -79,6 +82,7 @@ request('http://coinmarketcap.com/', function (error, response, html) {
       });
   });
 
+  // Price by name
   app.get('/price/:name', function(req, res){
     sequelize
       .query('SELECT price FROM coins WHERE name = :name',
