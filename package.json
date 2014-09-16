@@ -1,0 +1,15 @@
+{
+  "name": "topher-periscrape",
+  "version": "0.0.0",
+  "description": "Web scraping projet for Periscope.",
+  "main": "scrape.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "Topher Saunders",
+  "license": "MIT",
+  "devDependencies": {
+    "cheerio": "^0.17.0",
+    "request": "^2.42.0"
+  }
+}
