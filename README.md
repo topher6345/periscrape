@@ -13,7 +13,7 @@ JSON API for cryptocurrency prices using Node.js, cheerio, and Postgres.
 
 ### DB setup
 
-* Start server on port 5432
+* Start Postgres server on port 5432
 
 * `CREATE DATABASE periscrape`
 
