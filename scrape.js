@@ -9,16 +9,13 @@ var sequelize = new Sequelize('periscrape', 'topher',  'Aa12345678',{
 var express = require('express');
 var app = express();
 app.set('view engine', 'jade');
-var articles;
+var coins;
 
-var Article = sequelize.define('Article', {
-  title: Sequelize.STRING,
-  link: {
-    type: Sequelize.STRING,
-    unique: true
-  }
+var Coin = sequelize.define('Coin', {
+  name: Sequelize.STRING,
+  price: Sequelize.STRING
 }, {
-  tableName: 'articles'
+  tableName: 'coins'
 });
 
 
@@ -44,7 +41,7 @@ sequelize
   });
 
 
-request('https://news.ycombinator.com', function (error, response, html) {
+request('http://coinmarketcap.com/', function (error, response, html) {
   if(error) { return 1; }
   if (response.statusCode != 200) {
     console.log("Reponse was not success.");
@@ -53,31 +50,28 @@ request('https://news.ycombinator.com', function (error, response, html) {
 
   var $ = cheerio.load(html);
 
-  $('span.comhead').each(function(i, element){
-    var a = $(this).prev();
-    // console.log("Link: " +a.attr('href'));
-    // console.log("Title: " +a.text());
-    Article.create({
-      title: a.text(),
-      link: a.attr('href')
-    }).success(function(){
-      sequelize
-        .query('SELECT * FROM articles', null, { raw: true })
-        .success(function(data) {
-          articles = data;
-          console.log(data);
-        });
+
+
+  $('tr').each(function(i, element){
+    var a = $(this);
+
+    var name = a.find('td.currency-name').find('a').contents().text();
+    var price = a.find('a.price').contents().text();
+     Coin.create({
+      name: name,
+      price: price
     });
   });
+
 });
 
-
-
-
-
 app.get('/', function (req, res) {
-  console.log(articles);
-  res.render('index.jade', {articles: articles});
+  sequelize
+    .query('SELECT * FROM coins', null, { raw: true })
+    .success(function(data) {
+      res.json(data);
+    });
 });
 
 app.listen(3000);
+console.log("Now listening to response on port 3000");
