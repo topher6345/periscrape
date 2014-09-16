@@ -11,6 +11,8 @@ var app = express();
 app.set('view engine', 'jade');
 var coins;
 
+
+// Define Schema
 var Coin = sequelize.define('Coin', {
   name: Sequelize.STRING,
   price: Sequelize.STRING
@@ -18,7 +20,7 @@ var Coin = sequelize.define('Coin', {
   tableName: 'coins'
 });
 
-
+// Create Table
 sequelize
   .sync({ force: true })
   .complete(function(err) {
@@ -30,6 +32,7 @@ sequelize
      }
   });
 
+// Connect to Database
 sequelize
   .authenticate()
   .complete(function(err) {
@@ -40,21 +43,16 @@ sequelize
       console.log('Connection to database has been established successfully.');
   });
 
-
+// Scrape Website
 request('http://coinmarketcap.com/', function (error, response, html) {
   if(error) { return 1; }
   if (response.statusCode != 200) {
     console.log("Reponse was not success.");
     process.exit(1);
   }
-
   var $ = cheerio.load(html);
-
-
-
   $('tr').each(function(i, element){
     var a = $(this);
-
     var name = a.find('td.currency-name').find('a').contents().text();
     var price = a.find('a.price').contents().text();
      Coin.create({
@@ -62,36 +60,36 @@ request('http://coinmarketcap.com/', function (error, response, html) {
       price: price
     });
   });
-
 });
 
-app.get('/', function (req, res) {
-  sequelize
-    .query('SELECT * FROM coins', null, { raw: true })
-    .success(function(data) {
-      res.json(data);
-    });
-});
+// Routes
+  app.get('/', function (req, res) {
+    sequelize
+      .query('SELECT * FROM coins', null, { raw: true })
+      .success(function(data) {
+        res.json(data);
+      });
+  });
 
-app.get('/prices', function (req, res) {
-  sequelize
-    .query('SELECT price, name FROM coins', null, { raw: true })
-    .success(function(data) {
-      res.json(data);
-    });
-});
+  app.get('/prices', function (req, res) {
+    sequelize
+      .query('SELECT price, name FROM coins', null, { raw: true })
+      .success(function(data) {
+        res.json(data);
+      });
+  });
 
-app.get('/price/:name', function(req, res){
-  sequelize
-    .query('SELECT price FROM coins WHERE name = :name',
-            null,
-            { raw: true },
-            {name: req.params.name}
+  app.get('/price/:name', function(req, res){
+    sequelize
+      .query('SELECT price FROM coins WHERE name = :name',
+              null,
+              { raw: true },
+              {name: req.params.name}
 
-    ).success(function(data) {
-      res.json(data);
-    });
-});
+      ).success(function(data) {
+        res.json(data);
+      });
+  });
 
 app.listen(3000);
 console.log("Now listening to response on port 3000");
