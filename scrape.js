@@ -6,6 +6,9 @@ var sequelize = new Sequelize('periscrape', 'topher',  'Aa12345678',{
   port: 5432
 });
 
+var express = require('express');
+var app = express();
+
 
 var Article = sequelize.define('Article', {
   title: Sequelize.STRING,
@@ -61,3 +64,10 @@ request('https://news.ycombinator.com', function (error, response, html) {
   });
 });
 
+
+app.get('/', function(req, res){
+  console.log('Listening on port 3000');
+  res.send('hello world');
+});
+
+app.listen(3000);
