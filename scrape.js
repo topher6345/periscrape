@@ -66,33 +66,25 @@ request('http://coinmarketcap.com/', function (error, response, html) {
 
   // Index
   app.get('/', function (req, res) {
-    sequelize
-      .query('SELECT * FROM coins', null, { raw: true })
-      .success(function(data) {
+    Coin.findAll().complete(function(err, data) {
+      if (!!err) {
+        res.json(err);
+      } else {
         res.json(data);
-      });
-  });
-
-  // Raw prices
-  app.get('/prices', function (req, res) {
-    sequelize
-      .query('SELECT price, name FROM coins', null, { raw: true })
-      .success(function(data) {
-        res.json(data);
-      });
+      }
+    });
   });
 
   // Price by name
   app.get('/price/:name', function(req, res){
-    sequelize
-      .query('SELECT price FROM coins WHERE name = :name',
-              null,
-              { raw: true },
-              {name: req.params.name}
-
-      ).success(function(data) {
+    Coin.find({where: {name: req.params.name}})
+    .complete(function(err, data) {
+      if (!!err) {
+        res.json(err);
+      } else {
         res.json(data);
-      });
+      }
+    });
   });
 
 app.listen(3000);
