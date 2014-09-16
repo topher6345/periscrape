@@ -18,16 +18,22 @@ JSON API to cryptocurrency prices using Node.js, cheerio, and Postgres.
 ### Endpoints
 
 
-#### `/`
+#### All
+
+`/`
 
 Lists all cryptocurrencies name and price
 
 
-#### `/prices`
+#### Prices
+
+`/prices`
 
 Lists just bare prices
 
-#### `/price/:name`
+#### Price by name
+
+`/price/:name`
 
 Lists price by route `:name`
 
